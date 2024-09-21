@@ -1,0 +1,6 @@
+services:
+  controle_de_notas:
+    image: ${DOCKER_REGISTRY-}controledenotas
+    build:
+      context: .
+      dockerfile: Controle_de_notas/Dockerfile
