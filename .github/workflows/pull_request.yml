@@ -1,0 +1,49 @@
+name: Deploy to Docker Container
+
+on:
+  push:
+    branches:
+      - main # Substitua por sua branch de produ��o, se necess�rio
+
+jobs:
+  build_and_deploy:
+    runs-on: 
+      - self-hosted
+    name: Build and Deploy
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.USER_NAME_DOCKER_HUB }}
+          password: ${{ secrets.PASSWORD_DOCKER_HUB }}
+  
+      - name: Check if container exists
+        run: |
+          if docker inspect notaficalunicit >/dev/null 2>&1; then
+            docker stop notaficalunicit 
+            docker rm notaficalunicit
+            docker rmi edvandersonaduaneiras/notaficalunicit:teste
+            echo "Container notaficalunicit does not exist."
+          fi
+        continue-on-error: true
+  
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Controle_de_notas/Dockerfile
+          push: true
+          tags: edvandersonaduaneiras/notaficalunicit:teste 
+      
+
+      - name: Update and run new container
+        run: |
+          docker pull edvandersonaduaneiras/notaficalunicit:teste &&
+          docker run -d --name notaficalunicit --network bridge -p 5190:8080 edvandersonaduaneiras/notaficalunicit:teste

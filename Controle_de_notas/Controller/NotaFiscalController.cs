@@ -18,6 +18,7 @@ namespace Controle_de_notas.Controller
 
         public  async  Task<IEnumerable<NotafiscalData>> GetAllNotafiscal()
         {
+
             var notafiscalDTO = await _notaFiscalService.GetAll();
             var notafiscalData = new List<NotafiscalData>();
             foreach (var item in notafiscalDTO)
