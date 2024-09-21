@@ -6,10 +6,9 @@ USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-ENV ASPNETCORE_URLS=http://+:5016;http://+:8080
 
 # Esta fase é usada para compilar o projeto de serviço
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Development
 ENV ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
