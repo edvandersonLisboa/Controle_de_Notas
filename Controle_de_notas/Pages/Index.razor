@@ -1,0 +1,126 @@
+﻿@page "/"
+@using Controle_de_notas.Controller
+@using Controle_de_notas.Data
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+@inject NotaFiscalController notaFiscalController
+
+
+<h3>Dashboard</h3>
+<canvas id="myChart" width="400" height="200"></canvas>
+<canvas id="evolutionChart" width="400" height="200"></canvas>
+<div>
+    <input type="text" id="filterEmissao" placeholder="Filtrar por mês de emissão" @oninput="@(async () => await FilterTableByMonth("filterEmissao", 2))" />
+    <input type="text" id="filterCobranca" placeholder="Filtrar por mês de cobrança" @oninput="@(async () => await FilterTableByMonth("filterCobranca", 3))" />
+    <input type="text" id="filterPagamento" placeholder="Filtrar por mês de pagamento" @oninput="@(async () => await FilterTableByMonth("filterPagamento", 4))" />
+    <input type="text" id="filterStatus" placeholder="Filtrar por status" @oninput="@(async () => await FilterTableByStatus("filterStatus", 6))" />
+</div>
+<PageTitle>Counter</PageTitle>
+<table class="table" id="notaFiscalTable">
+    <thead class="table-light">
+        <tr>
+            <th scope="col">Numero Da Nota</th>
+            <th scope="col">Nome Pagador</th>
+            <th scope="col">Data Emissao</th>
+            <th scope="col">Data Cobranca</th>
+            <th scope="col">Data Pagamento</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Status</th>
+            <th scope="col">Boleto</th>
+            <th scope="col">NotaFiscal</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in data.ToList())
+        {
+            <tr>
+               
+                <td>@item.NumeroIdentificacao</td>
+                <td>@item.NomeDoPagador</td>
+                <td>@(item.DataEmissao.HasValue ? item.DataEmissao.Value.ToString("dd/MM/yyyy") : "")</td>
+                <td>@(item.DataCobranca.HasValue ? item.DataCobranca.Value.ToString("dd/MM/yyyy") : "")</td>
+                <td>@(item.DataPagamento.HasValue ? item.DataPagamento.Value.ToString("dd/MM/yyyy") : "")</td>
+                <td>@item.Valor</td>
+                <td>@item.Status</td>
+                <td>
+                    @if (item.NotaFiscal != null)
+                    {
+                        <a href="data:application/octet-stream;base64,@item.NotaFiscal.base64" download="@item.NotaFiscal.base64">Download</a>
+                    }
+                    else
+                    {
+                        <span>N/A</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Boleto != null)
+                    {
+                        <a href="data:application/octet-stream;base64,@item.Boleto.base64" download="@item.Boleto.base64">Download</a>
+                    }
+                    else
+                    {
+                        <span>N/A</span>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="pagination" class="pagination"></div>
+@code {
+
+    List<NotafiscalData> data = new List<NotafiscalData>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        data = (await notaFiscalController.GetAllNotafiscal()).ToList();
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var chartData = new
+            {
+                labels = new[] { "Janeiro", "Fvereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" },
+                datasets = new[]
+                {
+                    new
+                    {
+                        label = "My First dataset",
+                        backgroundColor = "rgba(75, 192, 192, 0.2)",
+                        borderColor = "rgba(75, 192, 192, 1)",
+                        borderWidth = 1,
+                        data = new[] { 65, 59, 80, 81, 56, 55, 40 }
+                    }
+                }
+            };
+
+            await JS.InvokeVoidAsync("initializeChart", "myChart", data, chartData);
+            await JS.InvokeVoidAsync("initializeEvolutionChart", "evolutionChart", data);
+            await JS.InvokeVoidAsync("paginacaoTable", "notaFiscalTable", 5);
+        }
+    }
+
+
+
+    private async Task FilterTableByMonth(string inputId, int columnIndex)
+    {
+        await JS.InvokeVoidAsync("filterTableByMonth", inputId, "notaFiscalTable", columnIndex);
+    }
+
+    private async Task FilterTableByStatus(string inputId, int columnIndex)
+    {
+        await JS.InvokeVoidAsync("filterTableByStatus", inputId, "notaFiscalTable", columnIndex);
+    }
+
+
+
+
+}
+
+
