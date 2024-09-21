@@ -46,4 +46,4 @@ jobs:
       - name: Update and run new container
         run: |
           docker pull  edvanderson/notaficalunicit:teste &&
-          docker run -d --name notaficalunicit --network bridge -p 5190:8080  edvanderson/notaficalunicit:teste
+          docker run -d --name notaficalunicit --network bridge -p 80:8080  edvanderson/notaficalunicit:teste
