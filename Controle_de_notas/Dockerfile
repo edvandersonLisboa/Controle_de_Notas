@@ -31,4 +31,5 @@ RUN dotnet publish "./Controle_de_notas.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY . ControleDeNotaFiscal.db
 ENTRYPOINT ["dotnet", "Controle_de_notas.dll"]
