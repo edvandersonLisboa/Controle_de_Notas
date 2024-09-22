@@ -5,89 +5,177 @@
 @inject IJSRuntime JS
 @inject NotaFiscalController notaFiscalController
 
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-4 col-sm-3 mb-4">
+            <article class="bg-light p-3">
+                <canvas id="doughnutChart" width="400" height="200"></canvas>
+            </article>
+        </div>
+        <div class="col-md-4 col-sm-3 mb-4">
+            <article class="bg-info p-3">
+                <canvas id="doughnutChart1" width="400" height="200"></canvas>
+            </article>
+        </div>
+        <div class="col-md-4 col-sm-3 mb-4">
+            <article class="bg-warning p-3">
+                <canvas id="doughnutChart2" width="400" height="200"></canvas>
+            </article>
+        </div>
+    </div>
 
-<h3>Dashboard</h3>
-<canvas id="myChart" width="400" height="200"></canvas>
-<canvas id="evolutionChart" width="400" height="200"></canvas>
-<div>
-    <input type="text" id="filterEmissao" placeholder="Filtrar por mês de emissão" @oninput="@(async () => await FilterTableByMonth("filterEmissao", 2))" />
-    <input type="text" id="filterCobranca" placeholder="Filtrar por mês de cobrança" @oninput="@(async () => await FilterTableByMonth("filterCobranca", 3))" />
-    <input type="text" id="filterPagamento" placeholder="Filtrar por mês de pagamento" @oninput="@(async () => await FilterTableByMonth("filterPagamento", 4))" />
-    <input type="text" id="filterStatus" placeholder="Filtrar por status" @oninput="@(async () => await FilterTableByStatus("filterStatus", 6))" />
-</div>
-<PageTitle>Counter</PageTitle>
-<table class="table" id="notaFiscalTable">
-    <thead class="table-light">
-        <tr>
-            <th scope="col">Numero Da Nota</th>
-            <th scope="col">Nome Pagador</th>
-            <th scope="col">Data Emissao</th>
-            <th scope="col">Data Cobranca</th>
-            <th scope="col">Data Pagamento</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Status</th>
-            <th scope="col">Boleto</th>
-            <th scope="col">NotaFiscal</th>
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <article class="bg-light p-3">
+                <canvas id="myChart" width="600" height="300"></canvas>
+            </article>
+        </div>
+        <div class="col-md-6 mb-3">
+            <article class="bg-light p-3">
+                <canvas id="evolutionChart" width="400" height="200"></canvas>
+            </article>
+        </div>
+    </div>
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in data.ToList())
-        {
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3 filters">
+            <label> Filtro Mês Emissão</label>
+            <input type="text" id="filterEmissao" class="form-control" placeholder="Filtrar por mês de emissão" @oninput="@(async () => await FilterTableByMonth("filterEmissao", 2))" />
+     
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label> Filtro Mês Cobrança</label>
+            <input type="text" id="filterCobranca" class="form-control" placeholder="Filtrar por mês de cobrança" @oninput="@(async () => await FilterTableByMonth("filterCobranca", 3))" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label> Filtro Mês Pagamento</label>
+            <input type="text" id="filterPagamento" class="form-control" placeholder="Filtrar por mês de pagamento" @oninput="@(async () => await FilterTableByMonth("filterPagamento", 4))" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label> Filtro Status</label>
+            <input type="text" id="filterStatus" class="form-control" placeholder="Filtrar por status" @oninput="@(async () => await FilterTableByStatus("filterStatus", 6))" />
+        </div>
+    </div>
+
+    <table class="table table-striped" id="notaFiscalTable">
+        <thead class="table-light">
             <tr>
-               
-                <td>@item.NumeroIdentificacao</td>
-                <td>@item.NomeDoPagador</td>
-                <td>@(item.DataEmissao.HasValue ? item.DataEmissao.Value.ToString("dd/MM/yyyy") : "")</td>
-                <td>@(item.DataCobranca.HasValue ? item.DataCobranca.Value.ToString("dd/MM/yyyy") : "")</td>
-                <td>@(item.DataPagamento.HasValue ? item.DataPagamento.Value.ToString("dd/MM/yyyy") : "")</td>
-                <td>@item.Valor</td>
-                <td>@item.Status</td>
-                <td>
-                    @if (item.NotaFiscal != null)
-                    {
-                        <a href="data:application/octet-stream;base64,@item.NotaFiscal.base64" download="@item.NotaFiscal.base64">Download</a>
-                    }
-                    else
-                    {
-                        <span>N/A</span>
-                    }
-                </td>
-                <td>
-                    @if (item.Boleto != null)
-                    {
-                        <a href="data:application/octet-stream;base64,@item.Boleto.base64" download="@item.Boleto.base64">Download</a>
-                    }
-                    else
-                    {
-                        <span>N/A</span>
-                    }
-                </td>
-
+                <th scope="col">Numero Da Nota</th>
+                <th scope="col">Nome Pagador</th>
+                <th scope="col">Data Emissao</th>
+                <th scope="col">Data Cobranca</th>
+                <th scope="col">Data Pagamento</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Status</th>
+                <th scope="col">Boleto</th>
+                <th scope="col">NotaFiscal</th>
             </tr>
-        }
-    </tbody>
-</table>
-<div id="pagination" class="pagination"></div>
+        </thead>
+        <tbody>
+            @foreach (var item in data.ToList())
+            {
+                <tr>
+                    <td>@item.NumeroIdentificacao</td>
+                    <td>@item.NomeDoPagador</td>
+                    <td>@(item.DataEmissao.HasValue ? item.DataEmissao.Value.ToString("dd/MM/yyyy") : "")</td>
+                    <td>@(item.DataCobranca.HasValue ? item.DataCobranca.Value.ToString("dd/MM/yyyy") : "")</td>
+                    <td>@(item.DataPagamento.HasValue ? item.DataPagamento.Value.ToString("dd/MM/yyyy") : "")</td>
+                    <td>@item.Valor</td>
+                    <td>@item.Status</td>
+                    <td>
+                        @if (item.NotaFiscal != null)
+
+                        {
+                            <a href="data:application/octet-stream;base64,@item.NotaFiscal.base64" download="@item.NotaFiscal.base64">Download</a>
+                        }
+
+                        else
+
+                        {
+                            <span>N/A</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Boleto != null)
+
+                        {
+                            <a href="data:application/octet-stream;base64,@item.Boleto.base64" download="@item.Boleto.base64">Download</a>
+                        }
+
+                        else
+
+                        {
+                            <span>N/A</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="pagination" class="pagination"></div>
+</div>
+
 @code {
 
     List<NotafiscalData> data = new List<NotafiscalData>();
 
+    decimal TotalNotasEmitidas = 0;
+
+    decimal ValorTotalDasNotasEmitidasSemCobrançasFeitas = 0;
+    decimal ValorTotalNotasVencidasInadiplentes = 0;
+
+    decimal ValorTotalNotasAVencer = 0;
+    decimal ValorTotalDasNotasPagas = 0;
+
+
+
+    decimal ValorTotalDasNotasNaoPagas = 0;
+
+
+
+    decimal Total = 0;
+
+
 
     protected override async Task OnInitializedAsync()
+
     {
+
         data = (await notaFiscalController.GetAllNotafiscal()).ToList();
+
+        TotalNotasEmitidas = data.Where(p => p.DataEmissao != null).Sum(p => p.Valor); 
+
+        ValorTotalNotasVencidasInadiplentes = data.Where(p => p.DataCobranca != null  ).Where(p => p.DataCobranca < DateTime.Now).Sum(p => p.Valor);
+
+        ValorTotalNotasAVencer = data.Where(p => p.DataCobranca != null).Where(p => p.DataCobranca > DateTime.Now).Sum(p => p.Valor);
+
+        ValorTotalDasNotasEmitidasSemCobrançasFeitas = data.Where(p => p.DataCobranca  == null).Sum(p => p.Valor);
+
+        ValorTotalDasNotasPagas = data.Where(p => p.DataPagamento != null).Sum(p => p.Valor);
+
+        ValorTotalDasNotasNaoPagas = data.Where(p => p.DataPagamento == null).Sum(p => p.Valor);
+
 
     }
 
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
+
     {
+
         if (firstRender)
+
         {
+
             var chartData = new
+
             {
-                labels = new[] { "Janeiro", "Fvereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" },
+
+                labels = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" },
+
                 datasets = new[]
+
                 {
                     new
                     {
@@ -98,29 +186,112 @@
                         data = new[] { 65, 59, 80, 81, 56, 55, 40 }
                     }
                 }
+
             };
 
-            await JS.InvokeVoidAsync("initializeChart", "myChart", data, chartData);
-            await JS.InvokeVoidAsync("initializeEvolutionChart", "evolutionChart", data);
-            await JS.InvokeVoidAsync("paginacaoTable", "notaFiscalTable", 5);
-        }
-    }
 
+            var doughnutData = new
+
+            {
+
+                labels = new[] { "Notas Emitdas", "Notas Sem Cobranças"},
+
+                datasets = new[]
+                {
+                    new
+                    {
+                        data = new[] { TotalNotasEmitidas - ValorTotalDasNotasEmitidasSemCobrançasFeitas, ValorTotalDasNotasEmitidasSemCobrançasFeitas },
+                        backgroundColor = new[] { "#F2CE59","#CECECE" },
+                        hoverBackgroundColor = new[] { "#D3B34B","#B6B4B4"  }
+                    }
+                }
+
+            };
+
+
+
+
+
+            var doughnutData1 = new
+            {
+
+
+
+                labels = new[] { "Notas Vencidas", "Notas a Vencer" },
+
+
+
+                datasets = new[]
+
+               {
+                    new
+                    {
+                        data = new[] { ValorTotalNotasVencidasInadiplentes,  ValorTotalNotasAVencer },
+                        backgroundColor = new[] { "#F2CE59","#CECECE" },
+                        hoverBackgroundColor = new[] { "#D3B34B","#B6B4B4"  }
+                    }
+                }
+
+
+
+            };
+
+
+
+
+
+            var doughnutData2= new
+
+            {
+
+                labels = new[] { "Notas Pagas", "Notas Não Pagas" },
+
+                datasets = new[]
+               {
+                    new
+                    {
+                        data = new[] { ValorTotalDasNotasPagas,   ValorTotalDasNotasNaoPagas  },
+                        backgroundColor = new[] { "#F2CE59","#CECECE" },
+                        hoverBackgroundColor = new[] { "#D3B34B","#B6B4B4"  }
+                    }
+                }
+
+            };
+
+
+
+            await JS.InvokeVoidAsync("initializeChart", "myChart", data, chartData);
+
+            await JS.InvokeVoidAsync("initializeEvolutionChart", "evolutionChart", data);
+
+            await JS.InvokeVoidAsync("paginacaoTable", "notaFiscalTable", 5);
+
+            await JS.InvokeVoidAsync("initializeDoughnutChart", "doughnutChart", doughnutData);
+
+            await JS.InvokeVoidAsync("initializeDoughnutChart", "doughnutChart1", doughnutData1);
+
+            await JS.InvokeVoidAsync("initializeDoughnutChart", "doughnutChart2", doughnutData2);
+;
+
+        }
+
+    }
 
 
     private async Task FilterTableByMonth(string inputId, int columnIndex)
     {
+
         await JS.InvokeVoidAsync("filterTableByMonth", inputId, "notaFiscalTable", columnIndex);
+
     }
+
+
 
     private async Task FilterTableByStatus(string inputId, int columnIndex)
+
     {
+
         await JS.InvokeVoidAsync("filterTableByStatus", inputId, "notaFiscalTable", columnIndex);
+
     }
-
-
-
-
 }
-
-

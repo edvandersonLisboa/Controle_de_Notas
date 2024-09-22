@@ -277,31 +277,24 @@ function paginacaoTable(tableId, rowsPerPage) {
     showPage(1);
 }
 
-
-function ValorTotalNotasEmitidas(dateString) {
-    const date = new Date(dateString);
-    const month = date.getMonth() + 1; // Adiciona 1 para obter o mês no formato 1-12
-    return month;
+function initializePieChart(chartId, data) {
+    var ctx = document.getElementById(chartId).getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true
+        }
+    });
 }
 
-function ValorTotalNotasEmitidasSemCobranca(dateString) {
-    const date = new Date(dateString);
-    const month = date.getMonth() + 1; // Adiciona 1 para obter o mês no formato 1-12
-    return month;
-}
-
-function ValorTotalNotasVencidasInadiplentes(dateString) {
-    const date = new Date(dateString);
-    const month = date.getMonth() + 1; // Adiciona 1 para obter o mês no formato 1-12
-    return month;
-}
-
-function ValorTotalNotasAVencer(dateString) {
-    const date = new Date(dateString);
-    const month = date.getMonth() + 1; // Adiciona 1 para obter o mês no formato 1-12
-    return month;
-}
-
-function ValorTotalDeNotasPagas() {
-
+function initializeDoughnutChart(chartId, data) {
+    var ctx = document.getElementById(chartId).getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: {
+            responsive: true
+        }
+    });
 }
