@@ -47,6 +47,3 @@ jobs:
         run: |
           docker pull  edvanderson/notaficalunicit:teste &&
           docker run -d --name notaficalunicit --network bridge -p 5016:8080 -v notaficalunicit-db:/app edvanderson/notaficalunicit:teste
-
-volumes:
-  notaficalunicit-db:
