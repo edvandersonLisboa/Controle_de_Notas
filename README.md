@@ -1,5 +1,5 @@
 # Projeto Controle_de_Notas
-Este projeto é um teste técnico desenvolvido, especialmente, para avaliar as suas 
+ 
 
 
 ## índice
@@ -11,7 +11,6 @@ Este projeto é um teste técnico desenvolvido, especialmente, para avaliar as s
 
 ## Informações
 habilidades como desenvolvedor fullstack.
-Teste Técnico TechNation - Fullstack 
 criação de uma tela do sistema financeiro de uma empresa com os 
 dados das notas fiscais emitidas no ano passado (2023) e um dashboard. Essa ferramenta 
 será utilizada pelo pessoal responsável pelo financeiro para manter o controle das notas e  saber os principais indicadores
@@ -64,4 +63,4 @@ será utilizada pelo pessoal responsável pelo financeiro para manter o controle
 ![Tabela, filtros e paginações](./assets/Captura%20de%20tela%202024-09-21%20210026.png)
 
 ## Como rodar o projeto
- é necessario apenas o netCore 8 para rodar, o banco está no projeto principal na camada Controle_de_notas.
+ é necessario apenas o netCore 8 para rodar, o banco está no projeto principal na camada Controle_de_notas. Este projeto é apenas o um Prótotipo
